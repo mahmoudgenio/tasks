@@ -1,6 +1,7 @@
 package com.example.loginactivity.Room;
 
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import com.example.loginactivity.Room.Category;
 
@@ -13,7 +14,7 @@ public interface Dao {
 
     List<Category> getAll();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     default void insert(Category category){
 
     }

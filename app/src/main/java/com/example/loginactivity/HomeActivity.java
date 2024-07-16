@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 public class HomeActivity extends AppCompatActivity {
     TextView textName;
     ImageView category1;
+    ImageView category2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +25,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         textName = findViewById(R.id.data);
         category1 = findViewById(R.id.img1);
+        category2 = findViewById(R.id.img2);
         Intent intent= getIntent();
        String getName = intent.getStringExtra("name");
         textName.setText(getName);
@@ -39,5 +41,19 @@ public class HomeActivity extends AppCompatActivity {
             }
 
         });
+
+
+        category2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(HomeActivity.this,ShowCategoriesActivity.class);
+                startActivity(intent);
+
+            }
+
+        });
     }
+
+
 }

@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-@Database(entities = Category.class,version = 1,exportSchema = true)
+@Database(entities = {Category.class},version = 2,exportSchema = false)
 
 public abstract class MyRoomDb extends RoomDatabase {
 
@@ -15,7 +15,7 @@ public abstract class MyRoomDb extends RoomDatabase {
     private android.content.Context Context;
 
     public static MyRoomDb getInstance(android.content.Context context) {
-        return Room.databaseBuilder(context, MyRoomDb.class, "categories")
+        return Room.databaseBuilder(context, MyRoomDb.class, "MyRoomDb")
                 .fallbackToDestructiveMigrationFrom()
                 .allowMainThreadQueries()
                 .build();

@@ -1,16 +1,24 @@
 package com.example.loginactivity.Room;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import org.jetbrains.annotations.NotNull;
 
 @Entity(tableName = "categories")
 
 public class Category {
 
-    String name;
-    String desc;
-    @PrimaryKey
-    int qhs;
+    @NotNull
+    @PrimaryKey(autoGenerate = true)
+    int Id;
+    @ColumnInfo(name = "qhs")
+    public  int qhs;
+    @ColumnInfo (name = "name")
+    public String name;
+    @ColumnInfo(name = "desc") public  String desc;
+
 
     public Category(String name, String desc,int qhs){
         this.name = name;
