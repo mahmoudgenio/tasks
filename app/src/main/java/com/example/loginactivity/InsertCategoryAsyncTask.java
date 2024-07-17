@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.loginactivity.Room.Category;
-import com.example.loginactivity.Room.MyRoomDb;
+import com.example.tables.Category;
+import com.example.Room.MyRoomDb;
 
 public class InsertCategoryAsyncTask extends AsyncTask<Void, Void, Boolean> {
     private Context context;

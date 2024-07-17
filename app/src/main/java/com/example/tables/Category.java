@@ -1,4 +1,4 @@
-package com.example.loginactivity.Room;
+package com.example.tables;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -12,7 +12,7 @@ public class Category {
 
     @NotNull
     @PrimaryKey(autoGenerate = true)
-    int Id;
+    public int Id;
     @ColumnInfo(name = "qhs")
     public  int qhs;
     @ColumnInfo (name = "name")

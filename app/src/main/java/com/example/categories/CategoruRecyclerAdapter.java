@@ -1,4 +1,4 @@
-package com.example.loginactivity;
+package com.example.categories;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,7 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.loginactivity.Room.Category;
+import com.example.loginactivity.R;
+import com.example.tables.Category;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class CategoruRecyclerAdapter extends RecyclerView.Adapter<CategoruRecycl
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textName = itemView.findViewById(R.id.textName);
+            //textName = itemView.findViewById(R.id.textName);
             textDescription = itemView.findViewById(R.id.textDescription);
             textQuantity = itemView.findViewById(R.id.textQuantity);
         }
@@ -48,7 +49,7 @@ public class CategoruRecyclerAdapter extends RecyclerView.Adapter<CategoruRecycl
         Category category = categories.get(position);
 
         // Bind data to views
-        holder.textName.setText(category.getName());
+       // holder.textName.setText(category.getName());
         holder.textDescription.setText(category.getDesc());
         holder.textQuantity.setText(String.valueOf(category.getQhs()));
     }

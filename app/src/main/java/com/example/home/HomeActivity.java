@@ -1,17 +1,16 @@
-package com.example.loginactivity;
+package com.example.home;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.example.categories.CategoriesActivity;
+import com.example.categories.ShowCategoriesActivity;
+import com.example.loginactivity.R;
 
 public class HomeActivity extends AppCompatActivity {
     TextView textName;
@@ -35,7 +34,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(HomeActivity.this,CategoriesActivity.class);
+                Intent intent = new Intent(HomeActivity.this, CategoriesActivity.class);
                 startActivity(intent);
 
             }
@@ -47,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(HomeActivity.this,ShowCategoriesActivity.class);
+                Intent intent = new Intent(HomeActivity.this, ShowCategoriesActivity.class);
                 startActivity(intent);
 
             }

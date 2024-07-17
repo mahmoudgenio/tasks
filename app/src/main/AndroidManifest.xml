@@ -13,16 +13,16 @@
         android:theme="@style/Theme.LoginActivity"
         tools:targetApi="31">
         <activity
-            android:name=".ShowCategoriesActivity"
+            android:name="com.example.categories.ShowCategoriesActivity"
             android:exported="false" />
         <activity
-            android:name=".CategoriesActivity"
+            android:name="com.example.categories.CategoriesActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name="com.example.home.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.home.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

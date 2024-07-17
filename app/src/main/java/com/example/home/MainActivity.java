@@ -1,4 +1,4 @@
-package com.example.loginactivity;
+package com.example.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,11 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.example.loginactivity.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
+
         editTextName = findViewById(R.id.user_name);
         editTextPass = findViewById(R.id.pass);
         loginBtn = findViewById(R.id.btn_login);
@@ -32,11 +33,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String name = editTextName.getText().toString();
-                String pass = editTextPass.getText().toString();
+               String pass = editTextPass.getText().toString();
 
                 if(name.equals("Mahmoud Mostafa")||pass.equals("1234")){
                     Toast.makeText(MainActivity.this,"Success Login",Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(MainActivity.this,HomeActivity.class);
+                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                     intent.putExtra("name" , name);
                     startActivity(intent);
 
