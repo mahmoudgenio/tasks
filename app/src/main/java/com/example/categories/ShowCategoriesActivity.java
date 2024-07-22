@@ -1,5 +1,6 @@
 package com.example.categories;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,51 +42,27 @@ public class ShowCategoriesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show_categories);
 
         initViews();
-        // categories = new ArrayList<>(); ==
-
-        // List<Category> categoriesList = MyRoomDb.getInstance(ShowCategoriesActivity.this).dao().getAll(); ==
-        // categories.clear(); ==
-        //  categoriesList.add(new Category("Category 2", "Description 2", 5));
-        //categories.addAll(categoriesList);
-        // if (categoriesList != null && !categoriesList.isEmpty()) { ==
-        //   Log.d("RoomDB", "Categories retrieved successfully. Count: " + categoriesList.size());  ==
-        // categories.addAll(categoriesList);  ==
-//            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-//            recyclerView.setLayoutManager(mLayoutManager);
-        // adapter = new CategoruRecyclerAdapter(this, categoriesList);  ==
-        //  recyclerView.setAdapter(adapter);  ==
-//        } else {
-//            Log.d("RoomDB", "No categories found in database.");
-//        }
-
-
-        // new spinner
-
-
-//        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryNames);
-//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        categorySpinner.setAdapter(spinnerAdapter);
-
-
         loadCategories();
 
 
     }
 
     private void loadCategories() {
-        new Thread(() -> {
             List<CategoryNameSpinner> categories = MyRoomDb.getInstance(this).daoCat().getAllCategories();
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(() -> {
                 categoryNames.clear();
                 categoryIds.clear();
                 for (CategoryNameSpinner category : categories) {
                     categoryNames.add(category.getName());
                     categoryIds.add(category.getId());
                 }
+        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryNames);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerAdapter.insert("select category", 0);
+        categorySpinner.setSelection(0,false);
+        categorySpinner.setAdapter(spinnerAdapter);
                 ((ArrayAdapter) categorySpinner.getAdapter()).notifyDataSetChanged();
-            });
-        }).start();
+
+
     }
 
 
@@ -105,30 +83,41 @@ public class ShowCategoriesActivity extends AppCompatActivity {
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+
                 int selectedCategoryId = categoryIds.get(position);
-                loadItems(selectedCategoryId);
-            }
+                if (selectedCategoryId != 0) {
+                    loadItems(selectedCategoryId);
+                }
+
+                }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
-        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryNames);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        categorySpinner.setAdapter(spinnerAdapter);
+
+
+
+
     }
 
-    private void loadItems(int categoryId) {
-        new Thread(() -> {
-            List<ItemDetails> items = MyRoomDb.getInstance(this).daoItem().getItemsForCategory(categoryId);
-            Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(() -> {
+
+    private void loadItems(int id) {
+
+
+        List<ItemDetails> items = MyRoomDb.getInstance(this).daoItem().getItemsForCategory(id);
+
+
                 itemsAdapter = new ItemsAdapter(items);
                 recyclerView.setAdapter(itemsAdapter);
-            });
-        }).start();
+                itemsAdapter.notifyDataSetChanged();
+
     }
+
+
+
 
 
 

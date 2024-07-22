@@ -2,6 +2,8 @@ package com.example.daw2tables;
 
 
 import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.DeleteTable;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -17,6 +19,16 @@ public interface CategoryDao {
     @Query("SELECT * FROM categorySpinner")
     List<CategoryNameSpinner> getAllCategories();
 
+    @Query("SELECT * FROM CategorySpinner WHERE name = :name ")
+    CategoryNameSpinner getCategoryByName(String name);
 
+    @Query("SELECT * FROM CategorySpinner WHERE name = :name ")
+    CategoryNameSpinner getIdByName(String name);
+
+    @Query("Delete from CategorySpinner")
+    void deleteAll();
+
+    @Query("SELECT * FROM CategorySpinner WHERE id = :id LIMIT 1")
+    CategoryNameSpinner getCategoryById(int id);
 
 }

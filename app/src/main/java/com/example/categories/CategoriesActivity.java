@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.Room.MyRoomDb;
 import com.example.loginactivity.R;
-import com.example.tables.Category;
 import com.example.test2tables.CategoryNameSpinner;
 import com.example.test2tables.ItemDetails;
 
@@ -20,7 +19,8 @@ import java.util.List;
 
 public class CategoriesActivity extends AppCompatActivity {
 
-Button addBtn;
+    Button addBtn;
+    Button addCat;
     EditText catName;
     EditText CatDesc;
     EditText CatQhs;
@@ -37,6 +37,7 @@ Button addBtn;
 
     public void initViews(){
         addBtn = findViewById(R.id.add_item);
+        addCat = findViewById(R.id.add_category);
         catName = findViewById(R.id.category_name);
 
         CatDesc = findViewById(R.id.desc);
@@ -46,20 +47,72 @@ Button addBtn;
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addCategory();
+                addItems();
             }
 
         });
 
+        addCat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addCategory();
+            }
+
+        });
+    }
+
+    public void addCategory(){
+        if (!ValidCate()) {
+            return;
+        }
+        String name = catName.getText().toString();
+        try {
+
+
+            //CategoryNameSpinner category = MyRoomDb.getInstance(this).daoCat().getCategoryByName(name);
+
+            if (isCategoryExists(name)) {
+                Toast.makeText(this, "Category already exists", Toast.LENGTH_SHORT).show();
+                return;
+            }else {
+                CategoryNameSpinner category = new CategoryNameSpinner(name);
+               // category.name = name;
+                MyRoomDb.getInstance(this).daoCat().insert(category);
+
+                List<CategoryNameSpinner> categories = new ArrayList<>();
+                categories = MyRoomDb.getInstance(this).daoCat().getAllCategories();
+                Log.d("RoomDB", "Inserting data: " + category.toString());
+                // List<Category> x = MyRoomDb.getInstance(this).dao().getAll();
+            }
+        } catch (Exception e) {
+            // Catch any other unexpected exceptions
+            Log.e("AddCategory", "Exception: " + e.getMessage());
+            // Optionally, you can show a generic error message to the user
+            Toast.makeText(this, "Error occurred while adding category", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 
-    private void addCategory() {
+
+    private boolean isCategoryExists(String catName) {
+        CategoryNameSpinner category = MyRoomDb.getInstance(this).daoCat().getCategoryByName(catName);
+        return category != null;
+    }
+
+    private int isCatIdExists(String catName) {
+        CategoryNameSpinner category = MyRoomDb.getInstance(this).daoCat().getIdByName(catName);
+        return category.getId();
+    }
+
+
+
+
+    private void addItems() {
         if (!Valid()) {
             return;
         }
 
-        int catId = 0;
         String name = catName.getText().toString();
         String desc = CatDesc.getText().toString();
         String qhsStr = CatQhs.getText().toString();
@@ -77,21 +130,25 @@ Button addBtn;
 
         try {
 
-           // Category category = new Category(name, desc, qhs);  ==
-            ItemDetails categoryItem = new ItemDetails(desc,qhs);
+            CategoryNameSpinner category = MyRoomDb.getInstance(this).daoCat().getCategoryByName(name);
+
+           int Id = isCatIdExists(name);
+
+            ItemDetails categoryItem = new ItemDetails(desc,qhs , Id);
+
+            //categoryItem.setId(Id);
 
             MyRoomDb.getInstance(this).daoItem().insert(categoryItem);
-            List<ItemDetails> categoriesItem = new ArrayList<>();
-            categoriesItem = MyRoomDb.getInstance(this).daoItem().getItemsForCategory(catId);
 
 
-            CategoryNameSpinner category = new CategoryNameSpinner(name);
-                MyRoomDb.getInstance(this).daoCat().insert(category);
+            CategoryNameSpinner category1 = new CategoryNameSpinner(name);
 
                 List<CategoryNameSpinner> categories = new ArrayList<>();
                     categories = MyRoomDb.getInstance(this).daoCat().getAllCategories();
-                    Log.d("RoomDB", "Inserting data: " + category.toString());
-           // List<Category> x = MyRoomDb.getInstance(this).dao().getAll();
+
+            List<ItemDetails> Items = new ArrayList<>();
+            Items = MyRoomDb.getInstance(this).daoItem().getAll();
+                    Log.d("RoomDB", "Inserting data: " + Items.toString());
 
         } catch (Exception e) {
             // Catch any other unexpected exceptions
@@ -99,6 +156,15 @@ Button addBtn;
             // Optionally, you can show a generic error message to the user
             Toast.makeText(this, "Error occurred while adding category", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    private boolean ValidCate() {
+        if(catName.getText().toString().isBlank()){
+
+            catName.setError("enter Category Name");
+        }
+        return true;
     }
 
 

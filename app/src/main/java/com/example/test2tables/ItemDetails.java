@@ -12,22 +12,23 @@ public class ItemDetails {
 
 
     @NotNull
-//    @PrimaryKey(autoGenerate = true)
+   @PrimaryKey(autoGenerate = true)
     public int Id;
     @ColumnInfo(name = "qhs")
     public  int qhs;
     @ColumnInfo(name = "desc") public  String desc;
 
-    @PrimaryKey(autoGenerate = true)
+   // @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "categoryId")  public int categoryId;
 
 
 
 
-    public ItemDetails(String desc, int qhs){
+
+    public ItemDetails(String desc, int qhs , int Id){
         this.desc = desc;
         this.qhs = qhs;
-
+        this.categoryId = Id;
 
     }
 

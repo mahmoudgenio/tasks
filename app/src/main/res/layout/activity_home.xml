@@ -40,7 +40,7 @@
         app:layout_constraintEnd_toEndOf="@id/img1"
         app:layout_constraintTop_toBottomOf="@id/img1"
         android:layout_marginTop="15dp"
-        android:text="Category1"
+        android:text="Data Entry"
         android:textSize="24sp"
         android:textStyle="bold"
 
@@ -67,8 +67,7 @@
         app:layout_constraintEnd_toEndOf="@id/img2"
         app:layout_constraintTop_toBottomOf="@id/img2"
         android:layout_marginTop="15dp"
-
-        android:text="Category2"
+        android:text="Show Data"
         android:textSize="24sp"
         android:textStyle="bold"
 
@@ -77,7 +76,7 @@
 
 
     <ImageView
-        android:id="@+id/img3"
+        android:id="@+id/export_data"
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:src="@mipmap/ic_launcher"
@@ -91,11 +90,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/img3"
-        app:layout_constraintEnd_toEndOf="@id/img3"
-        app:layout_constraintTop_toBottomOf="@id/img3"
+        app:layout_constraintStart_toStartOf="@id/export_data"
+        app:layout_constraintEnd_toEndOf="@id/export_data"
+        app:layout_constraintTop_toBottomOf="@id/export_data"
         android:layout_marginTop="15dp"
-        android:text="Category3"
+        android:text="Export Data"
         android:textSize="24sp"
         android:textStyle="bold"
 
@@ -104,7 +103,7 @@
 
 
     <ImageView
-        android:id="@+id/img4"
+        android:id="@+id/delete_data"
         android:layout_width="110dp"
         android:layout_height="110dp"
         android:src="@mipmap/ic_launcher"
@@ -119,11 +118,11 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/img4"
-        app:layout_constraintEnd_toEndOf="@id/img4"
-        app:layout_constraintTop_toBottomOf="@id/img4"
+        app:layout_constraintStart_toStartOf="@id/delete_data"
+        app:layout_constraintEnd_toEndOf="@id/delete_data"
+        app:layout_constraintTop_toBottomOf="@id/delete_data"
         android:layout_marginTop="15dp"
-        android:text="Category4"
+        android:text="Delete Data"
         android:textSize="24sp"
         android:textStyle="bold"
 
