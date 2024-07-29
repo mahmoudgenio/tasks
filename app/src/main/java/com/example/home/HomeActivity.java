@@ -4,24 +4,34 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.Api.RetrofitService;
 import com.example.Room.MyRoomDb;
 import com.example.categories.CategoriesActivity;
 import com.example.categories.ShowCategoriesActivity;
 import com.example.loginactivity.R;
+import com.example.test2tables.CategoryNameSpinner;
+import com.example.test2tables.ItemDetails;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -31,6 +41,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.util.List;
 
 public class HomeActivity extends AppCompatActivity {
     TextView textName;
@@ -49,6 +61,7 @@ public class HomeActivity extends AppCompatActivity {
         category2 = findViewById(R.id.img2);
         deleteData = findViewById(R.id.delete_data);
         exportData = findViewById(R.id.export_data);
+
         Intent intent= getIntent();
        String getName = intent.getStringExtra("name");
         textName.setText(getName);
@@ -88,7 +101,8 @@ public class HomeActivity extends AppCompatActivity {
         exportData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                requestStoragePermission();
+
+                    createFileWithCategoryName();
 
             }
 
@@ -117,62 +131,91 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    private static final int PERMISSION_REQUEST_CODE = 1;
+    public void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                try {
+                    Uri uri = Uri.parse("package:com.example.loginactivity");
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, uri);
+                    startActivity(intent);
+                    Toast.makeText(HomeActivity.this, ("Permission Accepted"), Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(HomeActivity.this,("Permission Denied"), Toast.LENGTH_SHORT).show();
+                }
+            }
 
-    private void requestStoragePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    PERMISSION_REQUEST_CODE);
         }
-        createFileWithCategoryName("Category1");
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
+        if (requestCode == PackageManager.PERMISSION_GRANTED) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted
-                createFileWithCategoryName("Category1");
-                Toast.makeText(this, "Permission accepted", Toast.LENGTH_SHORT).show();
-            } else {
-                // Permission denied
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show();
+                createFileWithCategoryName();
+            }
+            else {
+                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    public void createFileWithCategoryName(String name){
+    public void createFileWithCategoryName() {
+        requestPermission();
+        List<CategoryNameSpinner> list = MyRoomDb.getInstance(this).daoCat().getAllCategories();
 
-        Workbook workbook = new XSSFWorkbook();
-        Sheet sheet = workbook.createSheet(name);
-        Row row = sheet.createRow(0);
-        Cell cell = row.createCell(0);
-        cell.setCellValue("Item Description");
+        for (int i = 0; i < list.size(); i++) {
+            CategoryNameSpinner category = list.get(i);
+            String name = category.getName();
+            int id = category.getId();
+            Log.d("CategoryName", name);
 
-        Row row1 = sheet.createRow(1);
-        Cell cell1 = row1.createCell(1);
-        cell1.setCellValue("item quantities");
+            Workbook workbook = new XSSFWorkbook();
+            Sheet sheet = workbook.createSheet(name);
 
+            // Create header row
+            Row headerRow = sheet.createRow(0);
+            Cell headerCell1 = headerRow.createCell(0);
+            headerCell1.setCellValue("Item Description");
+            Cell headerCell2 = headerRow.createCell(1);
+            headerCell2.setCellValue("Item Quantities");
 
-        try {
+            // Create Items for each category Id
+            List<ItemDetails> items = MyRoomDb.getInstance(this).daoItem().getItemsForCategory(id);
+            for (int j = 1; j < items.size(); j++) {
+                ItemDetails item = items.get(j);
+                String itemDesc = item.desc;
+                int itemQhs = item.qhs;
 
-            File file = new File( Environment.getExternalStorageDirectory(),"excel.xlsx");
+                Log.d("ItemDesc", itemDesc);
+                Row row = sheet.createRow(j + 1);
+                Cell cell1 = row.createCell(0);
+                cell1.setCellValue(itemDesc);
 
-            // Output stream to write to the file
-            FileOutputStream out = new FileOutputStream(file);
-//            FileOutputStream out = new FileOutputStream(
-//                    "excel.xlsx");
-            workbook.write(out);
-            out.close();
-            Log.d("Excel file save in ", file.getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
+                Log.d("ItemQhs", String.valueOf(itemQhs));
+                Cell cell2 = row.createCell(1);
+                cell2.setCellValue(itemQhs);
+            }
+            File file = new File(Environment.getExternalStorageDirectory(), name + ".xlsx");
+
+            try (OutputStream out = new FileOutputStream(file)) {
+                workbook.write(out);
+                Log.d("Excel file save in", file.getAbsolutePath());
+                Toast.makeText(this, "File saved to " + file.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Error saving file", Toast.LENGTH_SHORT).show();
+            } finally {
+                try {
+                    workbook.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
-
-
 }
+
+

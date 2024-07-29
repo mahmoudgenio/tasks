@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
 
-    
 }
 
 android {
@@ -48,14 +47,33 @@ dependencies {
 
     //maven
    // implementation("org.apache.poi:poi:4.1.2")
-    implementation("org.apache.poi:poi-ooxml:5.2.3")
+    implementation(libs.poi.ooxml)
 
     implementation("org.apache.poi:poi:5.2.3")
+// Room
+    implementation("androidx.room:room-runtime:2.8.1")
+    annotationProcessor("androidx.room:room-compiler:2.8.1")
 
-    //room
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.10.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.10.0")
 
-    implementation ("androidx.room:room-runtime:2.6.1")
-    annotationProcessor ("androidx.room:room-compiler:2.6.1")
+    // OkHttp
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+
+    // Gson
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // AndroidX Core and AppCompat
+    implementation("androidx.core:core-ktx:1.14.0")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+
 
 
 
