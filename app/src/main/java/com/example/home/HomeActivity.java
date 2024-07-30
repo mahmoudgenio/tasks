@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.Api.CategoriesResponse;
 import com.example.Api.RetrofitService;
 import com.example.Room.MyRoomDb;
 import com.example.categories.CategoriesActivity;
@@ -42,7 +43,14 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class HomeActivity extends AppCompatActivity {
     TextView textName;
@@ -70,7 +78,7 @@ public class HomeActivity extends AppCompatActivity {
         category1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                //getAllCategories();
                 Intent intent = new Intent(HomeActivity.this, CategoriesActivity.class);
                 startActivity(intent);
 
@@ -215,6 +223,10 @@ public class HomeActivity extends AppCompatActivity {
             }
         }
     }
+
+
+
+
 
 }
 

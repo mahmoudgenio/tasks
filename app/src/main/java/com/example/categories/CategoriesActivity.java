@@ -9,6 +9,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.Api.CategoriesResponse;
+import com.example.Api.ItemsResponse;
+import com.example.Api.RetrofitService;
 import com.example.Room.MyRoomDb;
 import com.example.loginactivity.R;
 import com.example.test2tables.CategoryNameSpinner;
@@ -17,9 +20,16 @@ import com.example.test2tables.ItemDetails;
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class CategoriesActivity extends AppCompatActivity {
 
     Button addBtn;
+    Button addRetrofit;
     Button addCat;
     EditText catName;
     EditText CatDesc;
@@ -37,6 +47,7 @@ public class CategoriesActivity extends AppCompatActivity {
 
     public void initViews(){
         addBtn = findViewById(R.id.add_item);
+        addRetrofit = findViewById(R.id.add_categories_retrofit);
         addCat = findViewById(R.id.add_category);
         catName = findViewById(R.id.category_name);
 
@@ -48,6 +59,14 @@ public class CategoriesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 addItems();
+            }
+
+        });
+
+        addRetrofit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                insertAllCategoriesToRoom();
             }
 
         });
@@ -168,8 +187,6 @@ public class CategoriesActivity extends AppCompatActivity {
     }
 
 
-
-
     private boolean Valid() {
         if(catName.getText().toString().isBlank()){
 
@@ -187,7 +204,117 @@ public class CategoriesActivity extends AppCompatActivity {
         }
         return true;
     }
-    
+
+
+    public void insertAllCategoriesToRoom(){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.77:8080/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        RetrofitService apiService = retrofit.create(RetrofitService.class);
+        Call<List<CategoriesResponse>> call = apiService.getAllCategories();
+        call.enqueue(new Callback<List<CategoriesResponse>>() {
+            @Override
+            public void onResponse(Call<List<CategoriesResponse>> call, Response<List<CategoriesResponse>> response) {
+                List<CategoriesResponse> allCategoriesList = response.body();
+                if (response.isSuccessful() && response.code() == 200) {
+
+
+                    for (CategoriesResponse Category : allCategoriesList) {
+
+
+                        String catName = Category.getCategoryID();  // name
+
+
+
+                        try {
+
+                            if (isCategoryExists(catName)) {
+                                Toast.makeText(getApplicationContext(), "Category already exists", Toast.LENGTH_SHORT).show();
+
+                            }else {
+                                CategoryNameSpinner category = new CategoryNameSpinner(catName);
+                                MyRoomDb.getInstance(getApplicationContext()).daoCat().insert(category);
+                                insertAllItemsToRoom(catName);
+
+                            }
+                        } catch (Exception e) {
+                            // Catch any other unexpected exceptions
+                            Log.e("AddCategory", "Exception: " + e.getMessage());
+                            // Optionally, you can show a generic error message to the user
+                            Toast.makeText(getApplicationContext(), "Error occurred while adding category", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+
+
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<List<CategoriesResponse>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Server Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void insertAllItemsToRoom(String name){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.77:8080/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        RetrofitService apiService = retrofit.create(RetrofitService.class);
+        Call<List<ItemsResponse>> call = apiService.getAllItems();
+        call.enqueue(new Callback<List<ItemsResponse>>() {
+            @Override
+            public void onResponse(Call<List<ItemsResponse>> call, Response<List<ItemsResponse>> response) {
+                List<ItemsResponse> allItemsList = response.body();
+                if (response.isSuccessful() && response.code() == 200) {
+
+
+                    for (ItemsResponse Item : allItemsList) {
+
+                        CategoryNameSpinner category1 = MyRoomDb.getInstance(getApplicationContext()).daoCat().getIdByName(name);
+
+                        int catId = category1.getId();
+
+//                        String catName = Item.getCategoryID();  // name
+                        String desc = Item.getItemDesc();
+                        int qhs = Item.getItemID(); // qhs
+
+                        try {
+
+                                ItemDetails item = new ItemDetails(desc,qhs,catId);
+                                MyRoomDb.getInstance(getApplicationContext()).daoItem().insert(item);
+
+
+                        } catch (Exception e) {
+                            // Catch any other unexpected exceptions
+                            Log.e("AddCategory", "Exception: " + e.getMessage());
+                            // Optionally, you can show a generic error message to the user
+                            Toast.makeText(getApplicationContext(), "Error occurred while adding category", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<List<ItemsResponse>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Server Error", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
 
 
 }

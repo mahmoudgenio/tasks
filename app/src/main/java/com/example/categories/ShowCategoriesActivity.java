@@ -98,9 +98,6 @@ public class ShowCategoriesActivity extends AppCompatActivity {
             }
         });
 
-
-
-
     }
 
 

@@ -19,38 +19,48 @@ public interface RetrofitService {
 
 
 
-    public static class Client {
-
-        private static RetrofitService retrofitService = null;
-
-        public static RetrofitService getInstance() {
-            if (retrofitService == null) {
-                // Create Gson instance
-                Gson gson = new GsonBuilder()
-                        .setLenient()
-                        .create();
+    @GET("api/DownloadData/GetCategories")
+    Call<List<CategoriesResponse>> getAllCategories();
 
 
-                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+    @GET("api/DownloadData/GetAllItems")
+    Call<List<ItemsResponse>> getAllItems();
 
-                // Create OkHttpClient instance
-//                OkHttpClient client = new OkHttpClient.Builder()
-//                        .addInterceptor(logging)
+
+
+
+//    public static class Client {
+//
+//        private static RetrofitService retrofitService = null;
+//
+//        public static RetrofitService getInstance() {
+//            if (retrofitService == null) {
+//                // Create Gson instance
+//                Gson gson = new GsonBuilder()
+//                        .setLenient()
+//                        .create();
+//
+//
+//                HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+//
+//                // Create OkHttpClient instance
+////                OkHttpClient client = new OkHttpClient.Builder()
+////                        .addInterceptor(logging)
+////                        .build();
+//
+//                // Create Retrofit instance
+//                Retrofit retrofit = new Retrofit.Builder()
+//                        .baseUrl("http://192.168.1.77:8080/")
+////                        .client(client)  // Include the OkHttpClient instance
+//                        .addConverterFactory(GsonConverterFactory.create(gson))
 //                        .build();
-
-                // Create Retrofit instance
-                Retrofit retrofit = new Retrofit.Builder()
-                        .baseUrl("http://192.168.1.77:8080/")  // Replace with your base URL
-//                        .client(client)  // Include the OkHttpClient instance
-                        .addConverterFactory(GsonConverterFactory.create(gson))
-                        .build();
-
-                retrofitService = retrofit.create(RetrofitService.class);
-            }
-            return retrofitService;
-        }
-    }
+//
+//                retrofitService = retrofit.create(RetrofitService.class);
+//            }
+//            return retrofitService;
+//        }
+//    }
 }
 
 

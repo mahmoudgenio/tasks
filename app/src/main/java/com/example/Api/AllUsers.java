@@ -2,50 +2,49 @@ package com.example.Api;
 
 public class AllUsers {
 
-    String id;
-    int userId;
-    String userName;
-    String password;
+    String $id;
+    int UserID;
+    String UserName;
+    String Password;
 
     public AllUsers(String id, int userId, String userName, String password) {
-        this.id = id;
-        this.userId = userId;
-        this.userName = userName;
-        this.password = password;
+        this.$id = id;
+        this.UserID = userId;
+        this.UserName = userName;
+        this.Password = password;
     }
 
-    public AllUsers() {
+
+
+    public void set$id(String $id) {
+        this.$id = $id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setUserID(int userID) {
+        this.UserID = userID;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.UserName = userName;
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.Password = password;
     }
 
-    public String getId() {
-        return id;
+    public String get$id() {
+        return $id;
     }
 
-    public int getUserId() {
-        return userId;
+    public int getUserID() {
+        return UserID;
     }
 
     public String getUserName() {
-        return userName;
+        return UserName;
     }
 
     public String getPassword() {
-        return password;
+        return Password;
     }
 }
