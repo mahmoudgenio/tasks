@@ -125,6 +125,8 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int id) {
                 MyRoomDb.getInstance(getApplicationContext()).daoCat().deleteAll();
                 MyRoomDb.getInstance(getApplicationContext()).daoItem().deleteAll();
+                MyRoomDb.getInstance(getApplicationContext()).daoCat().resetPrimaryKey();
+                MyRoomDb.getInstance(getApplicationContext()).daoItem().resetItemPrimaryKey();
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

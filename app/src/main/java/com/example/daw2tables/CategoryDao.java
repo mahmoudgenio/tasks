@@ -31,4 +31,9 @@ public interface CategoryDao {
     @Query("SELECT * FROM CategorySpinner WHERE id = :id LIMIT 1")
     CategoryNameSpinner getCategoryById(int id);
 
+    @Query("DELETE FROM sqlite_sequence WHERE name = 'categorySpinner'")
+    void resetPrimaryKey();
+
+
+
 }

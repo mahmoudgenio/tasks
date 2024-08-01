@@ -25,4 +25,7 @@ public interface ItemDao {
     @Query("Delete from itemSpinner")
     void deleteAll();
 
+    @Query("DELETE FROM sqlite_sequence WHERE name = 'itemSpinner'")
+    void resetItemPrimaryKey();
+
 }

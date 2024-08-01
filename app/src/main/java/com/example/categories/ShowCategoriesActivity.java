@@ -29,6 +29,7 @@ public class ShowCategoriesActivity extends AppCompatActivity {
     private List<Integer> categoryIds;
     private ItemsAdapter itemsAdapter;
     private Spinner categorySpinner;
+    private int selectedCategoryId = 0;
 
     //=====
     private RecyclerView recyclerView;
@@ -80,17 +81,23 @@ public class ShowCategoriesActivity extends AppCompatActivity {
         MyRoomDb db = MyRoomDb.getInstance(getApplicationContext());
 
 
+
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
 
-                int selectedCategoryId = categoryIds.get(position);
+               //    int selectedCategoryId = categoryIds.get(position);
+                for(int i = 0 ; i<categoryIds.size();i++){
+                    int newCategoryId = categoryIds.get(i) ;
+                    selectedCategoryId = newCategoryId;
                 if (selectedCategoryId != 0) {
                     loadItems(selectedCategoryId);
                 }
+                }
 
                 }
+
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {

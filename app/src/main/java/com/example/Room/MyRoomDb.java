@@ -11,7 +11,7 @@ import com.example.tables.Category;
 import com.example.test2tables.CategoryNameSpinner;
 import com.example.test2tables.ItemDetails;
 
-@Database(entities = {Category.class , CategoryNameSpinner.class , ItemDetails.class},version = 41,exportSchema = false)
+@Database(entities = {Category.class , CategoryNameSpinner.class , ItemDetails.class},version = 43,exportSchema = false)
 
 public abstract class MyRoomDb extends RoomDatabase {
 

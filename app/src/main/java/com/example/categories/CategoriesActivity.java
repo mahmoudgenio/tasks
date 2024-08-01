@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class CategoriesActivity extends AppCompatActivity {
 
     Button addBtn;
+    ProgressBar load;
     Button addRetrofit;
     Button addCat;
     EditText catName;
@@ -50,6 +52,7 @@ public class CategoriesActivity extends AppCompatActivity {
         addRetrofit = findViewById(R.id.add_categories_retrofit);
         addCat = findViewById(R.id.add_category);
         catName = findViewById(R.id.category_name);
+        load = findViewById(R.id.progress_bar);
 
         CatDesc = findViewById(R.id.desc);
 
@@ -66,15 +69,30 @@ public class CategoriesActivity extends AppCompatActivity {
         addRetrofit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                load.setVisibility(View.VISIBLE);
                 insertAllCategoriesToRoom();
-            }
 
+                new android.os.Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        load.setVisibility(View.GONE);
+                    }
+                }, 3000);
+            }
+//                insertAllCategoriesToRoom();
+               // Toast.makeText(getApplicationContext(),"success insert from retrofit to room",Toast.LENGTH_LONG).show();
+//                load.setVisibility(View.GONE);
         });
+
 
         addCat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 addCategory();
+
+
             }
 
         });
@@ -219,10 +237,16 @@ public class CategoriesActivity extends AppCompatActivity {
             public void onResponse(Call<List<CategoriesResponse>> call, Response<List<CategoriesResponse>> response) {
                 List<CategoriesResponse> allCategoriesList = response.body();
                 if (response.isSuccessful() && response.code() == 200) {
+                    int limit = 10;
 
+
+                    int count = 0;
 
                     for (CategoriesResponse Category : allCategoriesList) {
+                        if (count >= limit) {
 
+                            break;
+                        }
 
                         String catName = Category.getCategoryID();  // name
 
@@ -245,6 +269,7 @@ public class CategoriesActivity extends AppCompatActivity {
                             // Optionally, you can show a generic error message to the user
                             Toast.makeText(getApplicationContext(), "Error occurred while adding category", Toast.LENGTH_SHORT).show();
                         }
+                        count++;
 
                     }
 
@@ -272,17 +297,27 @@ public class CategoriesActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<ItemsResponse>>() {
             @Override
             public void onResponse(Call<List<ItemsResponse>> call, Response<List<ItemsResponse>> response) {
+
                 List<ItemsResponse> allItemsList = response.body();
+               // allItemsList.clear();
                 if (response.isSuccessful() && response.code() == 200) {
 
+                    int limit = 10;
 
+                    int count = 0;
                     for (ItemsResponse Item : allItemsList) {
+                        if (count >= limit) {
 
-                        CategoryNameSpinner category1 = MyRoomDb.getInstance(getApplicationContext()).daoCat().getIdByName(name);
+                            break;
+                        }
 
-                        int catId = category1.getId();
+                        CategoryNameSpinner category1 = MyRoomDb.getInstance(getApplicationContext()).daoCat().getCategoryByName(name);
 
-//                        String catName = Item.getCategoryID();  // name
+
+                        int catId = category1.getId();  //2
+
+
+//
                         String desc = Item.getItemDesc();
                         int qhs = Item.getItemID(); // qhs
 
@@ -298,8 +333,11 @@ public class CategoriesActivity extends AppCompatActivity {
                             // Optionally, you can show a generic error message to the user
                             Toast.makeText(getApplicationContext(), "Error occurred while adding category", Toast.LENGTH_SHORT).show();
                         }
+                        count++;
+
 
                     }
+
 
 
                 }
