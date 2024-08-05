@@ -31,6 +31,8 @@ import com.example.Room.MyRoomDb;
 import com.example.categories.CategoriesActivity;
 import com.example.categories.ShowCategoriesActivity;
 import com.example.loginactivity.R;
+import com.example.scanner.CheckBarcode;
+import com.example.test2tables.BarcodeDetails;
 import com.example.test2tables.CategoryNameSpinner;
 import com.example.test2tables.ItemDetails;
 
@@ -58,7 +60,7 @@ public class HomeActivity extends AppCompatActivity {
     ImageView category2;
     ImageView deleteData;
     ImageView exportData;
-
+    ImageView barcodeQhs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -69,6 +71,16 @@ public class HomeActivity extends AppCompatActivity {
         category2 = findViewById(R.id.img2);
         deleteData = findViewById(R.id.delete_data);
         exportData = findViewById(R.id.export_data);
+        barcodeQhs = findViewById(R.id.barcode_btn);
+
+
+        barcodeQhs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, CheckBarcode.class);
+                startActivity(intent);
+            }
+        });
 
         Intent intent= getIntent();
        String getName = intent.getStringExtra("name");

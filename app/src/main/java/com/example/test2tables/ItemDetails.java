@@ -31,6 +31,24 @@ public class ItemDetails {
         this.categoryId = Id;
 
     }
+    public ItemDetails(){
+        this.desc = "";
+        this.qhs = 0;
+        this.categoryId = 0;
+
+    }
+
+    public void setQhs(int qhs) {
+        this.qhs = qhs;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
 
     public int getId() {
         return Id;

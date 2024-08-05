@@ -33,6 +33,9 @@ public class CategoryNameSpinner {
         this.Id = id;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 }
 
 

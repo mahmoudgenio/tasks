@@ -71,6 +71,7 @@ public class CategoriesActivity extends AppCompatActivity {
             public void onClick(View view) {
                 load.setVisibility(View.VISIBLE);
                 insertAllCategoriesToRoom();
+                insertAllItemsToRoom();
 
                 new android.os.Handler().postDelayed(new Runnable() {
                     @Override
@@ -239,7 +240,6 @@ public class CategoriesActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.code() == 200) {
                     int limit = 10;
 
-
                     int count = 0;
 
                     for (CategoriesResponse Category : allCategoriesList) {
@@ -248,8 +248,8 @@ public class CategoriesActivity extends AppCompatActivity {
                             break;
                         }
 
-                        String catName = Category.getCategoryID();  // name
 
+                        String catName = Category.getCategoryID();  // name
 
 
                         try {
@@ -260,7 +260,11 @@ public class CategoriesActivity extends AppCompatActivity {
                             }else {
                                 CategoryNameSpinner category = new CategoryNameSpinner(catName);
                                 MyRoomDb.getInstance(getApplicationContext()).daoCat().insert(category);
-                                insertAllItemsToRoom(catName);
+
+                                // get Items
+                                //check cat Exist or not
+                                // if found get catId and insert item
+                               // insertAllItemsToRoom(catName);
 
                             }
                         } catch (Exception e) {
@@ -272,12 +276,8 @@ public class CategoriesActivity extends AppCompatActivity {
                         count++;
 
                     }
-
-
-
                 }
             }
-
 
             @Override
             public void onFailure(Call<List<CategoriesResponse>> call, Throwable t) {
@@ -286,7 +286,8 @@ public class CategoriesActivity extends AppCompatActivity {
         });
     }
 
-    public void insertAllItemsToRoom(String name){
+
+    public void insertAllItemsToRoom(){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://192.168.1.77:8080/")
@@ -298,32 +299,38 @@ public class CategoriesActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<ItemsResponse>> call, Response<List<ItemsResponse>> response) {
 
-                List<ItemsResponse> allItemsList = response.body();
-               // allItemsList.clear();
+
                 if (response.isSuccessful() && response.code() == 200) {
+                    List<ItemsResponse> allItemsList = response.body(); // getItems
 
                     int limit = 10;
-
                     int count = 0;
                     for (ItemsResponse Item : allItemsList) {
                         if (count >= limit) {
-
                             break;
                         }
 
-                        CategoryNameSpinner category1 = MyRoomDb.getInstance(getApplicationContext()).daoCat().getCategoryByName(name);
+
+                       // String id = Item.getCategoryID();
+                       // CategoryNameSpinner category1 = MyRoomDb.getInstance(getApplicationContext()).daoCat().getCategoryByName(name);
 
 
-                        int catId = category1.getId();  //2
-
-
+//                        if(!isCategoryExists(name)){
 //
+//                            Toast.makeText(getApplicationContext(), "cat not found", Toast.LENGTH_SHORT).show();
+//                        }
+
+
+                        int Id = isCatIdExists(Item.getCategoryID());
+                       // int catId = category1.getId();  //2
+
                         String desc = Item.getItemDesc();
                         int qhs = Item.getItemID(); // qhs
 
                         try {
 
-                                ItemDetails item = new ItemDetails(desc,qhs,catId);
+                               // ItemDetails item = new ItemDetails(desc,qhs,Id);
+                            ItemDetails item = new ItemDetails(desc,qhs,Id);
                                 MyRoomDb.getInstance(getApplicationContext()).daoItem().insert(item);
 
 

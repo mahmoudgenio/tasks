@@ -76,7 +76,22 @@ dependencies {
 
     implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
 
+    implementation ("com.zebra:emdk:8.0.0")
 
+
+   //implementation("libs-zebra:zebra-scanner-library:1.0.0")
+
+    compileOnly ("com.symbol:emdk:7.6.10")
+    // Zebra Scanner SDK
+    implementation (libs.scanner.sdk)
+    implementation (libs.zebra.emdk)
+
+    implementation (libs.printer.sdk)
+
+    implementation (libs.device.utils)
+
+
+    implementation (libs.key.management)
 
 
 

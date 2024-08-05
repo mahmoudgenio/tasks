@@ -29,7 +29,7 @@ public class ShowCategoriesActivity extends AppCompatActivity {
     private List<Integer> categoryIds;
     private ItemsAdapter itemsAdapter;
     private Spinner categorySpinner;
-    private int selectedCategoryId = 0;
+   // private int selectedCategoryId = 0;
 
     //=====
     private RecyclerView recyclerView;
@@ -56,8 +56,9 @@ public class ShowCategoriesActivity extends AppCompatActivity {
                     categoryNames.add(category.getName());
                     categoryIds.add(category.getId());
                 }
-        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryNames);
+         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categoryNames);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinnerAdapter.insert("select category", 0);
         categorySpinner.setSelection(0,false);
         categorySpinner.setAdapter(spinnerAdapter);
@@ -65,6 +66,7 @@ public class ShowCategoriesActivity extends AppCompatActivity {
 
 
     }
+
 
 
     private void initViews(){
@@ -83,25 +85,28 @@ public class ShowCategoriesActivity extends AppCompatActivity {
 
 
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                if(position == 0 ){
+                    return;
+                }else if(position>0){
+                    Object selectedCategory =  parent.getItemAtPosition(position);
+                    CategoryNameSpinner catId = db.daoCat().getIdByName(selectedCategory.toString());
 
-               //    int selectedCategoryId = categoryIds.get(position);
-                for(int i = 0 ; i<categoryIds.size();i++){
-                    int newCategoryId = categoryIds.get(i) ;
-                    selectedCategoryId = newCategoryId;
-                if (selectedCategoryId != 0) {
-                    loadItems(selectedCategoryId);
+                   List<ItemDetails> itemsTest = db.daoItem().getAll();
+                    if (selectedCategory != null && catId.getId()!=0) {
+                        loadItems(catId.getId());
+                    }
                 }
                 }
 
-                }
 
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
+                // TODO
             }
         });
 
